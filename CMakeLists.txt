@@ -18,6 +18,8 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Widgets finds its own dependencies.
 find_package(Qt5Widgets REQUIRED)
+find_package(Qt5UiTools REQUIRED)
+find_package(Qt5XmlPatterns REQUIRED)
 
 #Зreprocessor definitions
 if (WIN32)
@@ -40,4 +42,4 @@ qt5_wrap_ui( files_ui_h ${files_ui})
 add_executable(qss ${files_cpp} ${files_h} ${files_ui_h})
 
 # Use the Widgets module from Qt 5.
-target_link_libraries(qss Qt5::Widgets)
+target_link_libraries(qss Qt5::Widgets Qt5::UiTools Qt5::XmlPatterns)
