@@ -19,6 +19,16 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 # Widgets finds its own dependencies.
 find_package(Qt5Widgets REQUIRED)
 
+#Зreprocessor definitions
+if (WIN32)
+	add_definitions(-DCL_COMP)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj /EHsc")
+	# Activate use of multi-processor compilation if we have Microsft Visual C++ compiler.
+	if (MSVC)
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+	endif (MSVC)
+endif (WIN32)
+
 #Collect .cpp, .h, and .ui sources from the corresponding directies
 file(GLOB files_cpp "source/*.cpp")
 file(GLOB files_h "source/*.h")
