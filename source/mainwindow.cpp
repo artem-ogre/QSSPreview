@@ -10,16 +10,18 @@ const QString MainWindow::m_uiFileName = "C:/Artem/Work/iAnalyse_GIT/iAnalyseSrc
 const QString MainWindow::m_qssFileName = "C:/Users/astra/Dropbox/PyQSS/dark.qss";
 
 MainWindow::MainWindow( QWidget *parent )
-: QMainWindow( parent ), m_testWidget( 0 )
+: QMainWindow( parent ), m_fileWatcher( this ), m_testWidget( 0 )
 {
 	m_ui.setupUi( this );
 	connectSignalsToSlots();
+	initFileWatcher();
 }
 
 void MainWindow::connectSignalsToSlots()
 {
 	connect( m_ui.pushButton_DisplayUI, SIGNAL( clicked() ), this, SLOT( displayUI() ) );
-	connect( m_ui.pushButton_ApplyQSS, SIGNAL( clicked() ), this, SLOT( applyQSS() ) );
+	connect( m_ui.pushButton_ApplyQSS, SIGNAL( clicked() ), this, SLOT( loadAndApplyQSS() ) );
+	connect( &m_fileWatcher, SIGNAL( fileChanged( QString ) ), this, SLOT( onFileChanged( QString ) ) );
 }
 
 void MainWindow::displayUI()
@@ -35,10 +37,29 @@ void MainWindow::displayUI()
 		QFile::remove( m_tempRCCFileName );
 
 		//Instantiate from UI
+		QWidget * newTestWidget = widgetFromUI( m_uiFileName );
 		if( m_testWidget )
+		{
+			newTestWidget->restoreGeometry( m_testWidget->saveGeometry() );
 			delete m_testWidget;
-		m_testWidget = widgetFromUI( m_uiFileName );
+		}
+		m_testWidget = newTestWidget;
+		if( !m_style.isEmpty() )
+			applyStylesheetToWidget( m_style, m_testWidget );
 		m_testWidget->show();
+	}
+	catch( ... )
+	{
+		return;
+	}
+}
+
+void MainWindow::loadAndApplyQSS()
+{
+	try
+	{
+		m_style = readStylesheetFromQSS( m_qssFileName );
+		applyStylesheetToWidget( m_style, m_testWidget );
 	}
 	catch( ... )
 	{
@@ -55,7 +76,7 @@ QWidget * MainWindow::widgetFromUI( QString filename )
 		qDebugWithInfo() << "Cannot open the UI file.";
 		throw std::exception( "Cannot open the UI file." );
 	}
-	QWidget * widget = loader.load( &file, this );
+	QWidget * widget = loader.load( &file );
 	return widget;
 }
 
@@ -125,17 +146,50 @@ void MainWindow::compileQRC( QString filename )
 	}
 }
 
-void MainWindow::applyQSS()
+QString MainWindow::readStylesheetFromQSS(QString const& qssFile) const
 {
 	// Load an application style
-	QFile styleFile( m_qssFileName );
+	QFile styleFile( qssFile );
 	if( !styleFile.open( QFile::ReadOnly ) )
 	{
-		qDebugWithInfo() << "Cannot open the QSS file.";
+		qDebugWithInfo() << "Cannot open the QSS file."; //TODO: no repeating, everywhere
 		throw std::exception( "Cannot open the QSS file." );
 	}
 	QTextStream styleIn( &styleFile );
-	QString style = styleIn.readAll();
+	QString res = styleIn.readAll();
 	styleFile.close();
-	m_testWidget->setStyleSheet( style );
+	return res;
 }
+
+void MainWindow::applyStylesheetToWidget( QString const & style, QWidget * widget )
+{
+	if( style.isEmpty() )
+	{
+		qDebugWithInfo() << "Stylesheet is empty.";
+		throw std::exception( "Stylesheet is empty." );
+	}
+	else if( !widget )
+	{
+		qDebugWithInfo() << "Stylesheet is loaded but not applied. Widget is null. Display UI first?";
+		throw std::exception( "Stylesheet is loaded but not applied. Widget is null. Display UI first?" );
+	}
+	widget->setStyleSheet( style );
+}
+
+void MainWindow::initFileWatcher()
+{
+	m_fileWatcher.addPath( m_qssFileName );
+	m_fileWatcher.addPath( m_uiFileName );
+}
+
+void MainWindow::onFileChanged( const QString & path )
+{
+	qDebug() << "fileChanged: " << path;
+	m_fileWatcher.addPath( path ); //not to loose the track of a file
+	if( path == m_uiFileName )
+		displayUI();
+	if( path == m_qssFileName )
+		loadAndApplyQSS();
+}
+
+
