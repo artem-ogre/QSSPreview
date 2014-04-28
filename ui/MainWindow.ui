@@ -16,7 +16,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
-     <widget class="QPushButton" name="pushButton_DisplayUI">
+     <widget class="QPushButton" name="pushButton_UI">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
         <horstretch>0</horstretch>
@@ -24,12 +24,12 @@
        </sizepolicy>
       </property>
       <property name="text">
-       <string>Display UI</string>
+       <string>UI</string>
       </property>
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="pushButton_ApplyQSS">
+     <widget class="QPushButton" name="pushButton_QSS">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
         <horstretch>0</horstretch>
@@ -37,7 +37,7 @@
        </sizepolicy>
       </property>
       <property name="text">
-       <string>Apply QSS</string>
+       <string>QSS</string>
       </property>
      </widget>
     </item>

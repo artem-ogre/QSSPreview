@@ -19,12 +19,12 @@ MainWindow::MainWindow( QWidget *parent )
 
 void MainWindow::connectSignalsToSlots()
 {
-	connect( m_ui.pushButton_DisplayUI, SIGNAL( clicked() ), this, SLOT( displayUI() ) );
-	connect( m_ui.pushButton_ApplyQSS, SIGNAL( clicked() ), this, SLOT( loadAndApplyQSS() ) );
-	connect( &m_fileWatcher, SIGNAL( fileChanged( QString ) ), this, SLOT( onFileChanged( QString ) ) );
+	connect( m_ui.pushButton_UI, SIGNAL( clicked() ), this, SLOT( loadWidgetFromUI() ) );
+	connect( m_ui.pushButton_QSS, SIGNAL( clicked() ), this, SLOT( loadAndApplyQSS() ) );
+	connect( &m_fileWatcher, SIGNAL( fileChanged( QString ) ), this, SLOT( watchedFileChanged( QString ) ) );
 }
 
-void MainWindow::displayUI()
+void MainWindow::loadWidgetFromUI()
 {
 	try
 	{
@@ -67,37 +67,34 @@ void MainWindow::loadAndApplyQSS()
 	}
 }
 
-QWidget * MainWindow::widgetFromUI( QString filename )
+QWidget * MainWindow::widgetFromUI( QString filename ) const
 {
 	QUiLoader loader;
 	QFile file( filename );
 	if( !file.open( QFile::ReadOnly ) )
 	{
-		qDebugWithInfo() << "Cannot open the UI file.";
-		throw std::exception( "Cannot open the UI file." );
+		LogErrorAndThrowException( "Cannot open the UI file." );
 	}
 	QWidget * widget = loader.load( &file );
 	return widget;
 }
 
-QStringList MainWindow::qrcListFromUI( QString filename )
+QStringList MainWindow::qrcListFromUI( QString filename ) const
 {
 	//Open file
 	QFile file( filename );
 	if( !file.open( QFile::ReadOnly ) )
 	{
-		qDebugWithInfo() << "Cannot open the UI file.";
-		throw std::exception( "Cannot open the UI file." );
+		LogErrorAndThrowException( "Cannot open the UI file." );
 	}
 
 	//Query resources in a string
 	QXmlQuery xmlQuery;
-	xmlQuery.bindVariable( "myDocument", &file );
-	xmlQuery.setQuery( "doc($myDocument)/ui/resources/include/data(@location)" );
+	xmlQuery.bindVariable( "documentName", &file );
+	xmlQuery.setQuery( "doc($documentName)/ui/resources/include/data(@location)" );
 	if( !xmlQuery.isValid() )
 	{
-		qDebugWithInfo() << "XmlQuery is not valid";
-		throw std::exception( "XmlQuery is not valid" );
+		LogErrorAndThrowException( "XmlQuery is not valid" );
 	}
 	QString res;
 	xmlQuery.evaluateTo( &res );
@@ -117,13 +114,13 @@ QStringList MainWindow::qrcListFromUI( QString filename )
 	return qrcList;
 }
 
-void MainWindow::compileQRC( QString filename )
+void MainWindow::compileQRC( QString filename ) const
 {
 	//Check if file exists
 	if( !QFile::exists( filename ) )
 	{
-		qDebugWithInfo() << "QRC file does not exist:" << filename;
-		throw std::exception( "QRC file does not exist." );
+		QString message( "QRC file does not exist: " + filename );
+		LogErrorAndThrowException( message.toLocal8Bit().constData() );
 	}
 
 	// Run rcc on qrc
@@ -134,15 +131,14 @@ void MainWindow::compileQRC( QString filename )
 	if( !process.waitForFinished() ) {
 		const QString path = QString::fromLocal8Bit( qgetenv( "PATH" ) );
 		QString message = QString( "'%1' could not be found when run from '%2'. Path: '%3' " ).arg( command, QDir::currentPath(), path );
-		qDebugWithInfo() << message;
-		throw std::exception( message.toLocal8Bit().data() );
+		LogErrorAndThrowException( message.toLocal8Bit().constData() );
 	}
 	const QChar cr = QLatin1Char( '\r' );
 	const QString err = QString::fromLocal8Bit( process.readAllStandardError() ).remove( cr );
 	if( !err.isEmpty() )
 	{
-		qDebugWithInfo() << "unexpected stderr contents: " << err;
-		throw std::exception( "unexpected stderr contents" );
+		QString message( "Unexpected stderr contents: " + err );
+		LogErrorAndThrowException( message.toLocal8Bit().constData() );
 	}
 }
 
@@ -152,8 +148,7 @@ QString MainWindow::readStylesheetFromQSS(QString const& qssFile) const
 	QFile styleFile( qssFile );
 	if( !styleFile.open( QFile::ReadOnly ) )
 	{
-		qDebugWithInfo() << "Cannot open the QSS file."; //TODO: no repeating, everywhere
-		throw std::exception( "Cannot open the QSS file." );
+		LogErrorAndThrowException( "Cannot open the QSS file." );
 	}
 	QTextStream styleIn( &styleFile );
 	QString res = styleIn.readAll();
@@ -165,13 +160,11 @@ void MainWindow::applyStylesheetToWidget( QString const & style, QWidget * widge
 {
 	if( style.isEmpty() )
 	{
-		qDebugWithInfo() << "Stylesheet is empty.";
-		throw std::exception( "Stylesheet is empty." );
+		LogErrorAndThrowException( "Stylesheet is empty." );
 	}
 	else if( !widget )
 	{
-		qDebugWithInfo() << "Stylesheet is loaded but not applied. Widget is null. Display UI first?";
-		throw std::exception( "Stylesheet is loaded but not applied. Widget is null. Display UI first?" );
+		LogErrorAndThrowException( "Stylesheet is loaded but not applied. Widget is null. Display UI first?" );
 	}
 	widget->setStyleSheet( style );
 }
@@ -182,14 +175,12 @@ void MainWindow::initFileWatcher()
 	m_fileWatcher.addPath( m_uiFileName );
 }
 
-void MainWindow::onFileChanged( const QString & path )
+void MainWindow::watchedFileChanged( const QString & path )
 {
 	qDebug() << "fileChanged: " << path;
 	m_fileWatcher.addPath( path ); //not to loose the track of a file
 	if( path == m_uiFileName )
-		displayUI();
+		loadWidgetFromUI();
 	if( path == m_qssFileName )
 		loadAndApplyQSS();
 }
-
-

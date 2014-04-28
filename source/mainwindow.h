@@ -13,15 +13,17 @@ public:
 
 private:
 	void connectSignalsToSlots();
-	private slots:
-	void displayUI();
+	
+private slots:
+	void loadWidgetFromUI();
 	void loadAndApplyQSS();
 	QString readStylesheetFromQSS( QString const& ) const;
 	void applyStylesheetToWidget( QString const & style, QWidget * widget );
-	QWidget * widgetFromUI( QString filename );
-	QStringList qrcListFromUI( QString filename );
-	void compileQRC( QString filename );
+	QWidget * widgetFromUI( QString filename ) const;
+	QStringList qrcListFromUI( QString filename ) const;
+	void compileQRC( QString filename ) const;
 	void initFileWatcher();
+	void watchedFileChanged( const QString & path );
 
 private:
 	Ui::MainWindow m_ui;
@@ -32,8 +34,6 @@ private:
 	QString m_style;
 	QFileSystemWatcher m_fileWatcher;
 
-private slots:
-	void onFileChanged( const QString & path );
 };
 
 #endif
