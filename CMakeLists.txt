@@ -35,11 +35,13 @@ endif (WIN32)
 file(GLOB files_cpp "source/*.cpp")
 file(GLOB files_h "source/*.h")
 file(GLOB files_ui "ui/*.ui")
+file(GLOB files_qrc "images/*.qrc")
 
 qt5_wrap_ui( files_ui_h ${files_ui})
+QT5_ADD_RESOURCES( files_qrc_cpp ${files_qrc} ) #resources have to be added to executables!
 
 #Add an executable
-add_executable(qss ${files_cpp} ${files_h} ${files_ui_h})
+add_executable(qss ${files_cpp} ${files_h} ${files_ui_h} ${files_qrc_cpp})
 
 # Use the Widgets module from Qt 5.
 target_link_libraries(qss Qt5::Widgets Qt5::UiTools Qt5::XmlPatterns)

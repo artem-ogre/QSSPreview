@@ -1,0 +1,10 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>next_icon.png</file>
+    <file>ok_icon.png</file>
+    <file>qss_icon.png</file>
+    <file>recent_qss_icon.png</file>
+    <file>recent_ui_icon.png</file>
+    <file>ui_icon.png</file>
+  </qresource>
+</RCC>

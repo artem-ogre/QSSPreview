@@ -1,40 +1,61 @@
 #include <QtGui>
 #include <QtUiTools>
 #include <QXmlQuery>
+#include <QFileDialog>
 
 #include "MainWindow.h"
 #include "common.h"
 
-const QString MainWindow::m_tempRCCFileName = "tempRCC";
-const QString MainWindow::m_uiFileName = "C:/Artem/Work/iAnalyse_GIT/iAnalyseSrc/iAnalyseToolkit/Dreamcaster/dream_caster4.ui";//"C:/Artem/Work/iAnalyse_GIT/iAnalyseSrc/iAnalyseGUI/Mainwindow.ui";
-const QString MainWindow::m_qssFileName = "C:/Users/astra/Dropbox/PyQSS/dark.qss";
+QString MainWindow::m_tempRCCFileName = "tempRCC";
+QString MainWindow::m_uiFileName = "";
+QString MainWindow::m_qssFileName = "";
+QSettings MainWindow::m_settings("ArtemAmirkhanov", "QSS");
 
 MainWindow::MainWindow( QWidget *parent )
 : QMainWindow( parent ), m_fileWatcher( this ), m_testWidget( 0 )
 {
 	m_ui.setupUi( this );
 	connectSignalsToSlots();
-	initFileWatcher();
+	loadSettings();
+	updateFileWatcher();
+	initUIStates();
 }
 
 void MainWindow::connectSignalsToSlots()
 {
-	connect( m_ui.pushButton_UI, SIGNAL( clicked() ), this, SLOT( loadWidgetFromUI() ) );
-	connect( m_ui.pushButton_QSS, SIGNAL( clicked() ), this, SLOT( loadAndApplyQSS() ) );
+	connect( m_ui.pushButton_ui, SIGNAL( clicked() ), this, SLOT( loadUIFromFile() ) );
+	connect( m_ui.pushButton_qss, SIGNAL( clicked() ), this, SLOT( loadQSSFromFile() ) );
+	connect( m_ui.pushButton_recentUI, SIGNAL( clicked() ), this, SLOT( loadLastUI() ) );
+	connect( m_ui.pushButton_recentQSS, SIGNAL( clicked() ), this, SLOT( loadLastQSS() ) );
 	connect( &m_fileWatcher, SIGNAL( fileChanged( QString ) ), this, SLOT( watchedFileChanged( QString ) ) );
 }
 
-void MainWindow::loadWidgetFromUI()
+void MainWindow::loadUIFromFile()
+{
+	if( !openUIFile() )
+		return;
+	loadUI();
+}
+
+void MainWindow::loadLastUI()
+{
+	loadSettings();
+	loadUI();
+}
+
+void MainWindow::loadUI()
 {
 	try
 	{
 		//Dynamically loaded resources attached to the UI file
 		QStringList resoruces = qrcListFromUI( m_uiFileName );
-		QFileInfo fi( m_uiFileName );
-		QString qrcFileName = fi.absolutePath() + "/" + resoruces.at( 0 );
-		compileQRC( qrcFileName );
-		bool result = QResource::registerResource( m_tempRCCFileName );
-		QFile::remove( m_tempRCCFileName );
+		if( 0 != resoruces.size() )
+		{
+			QString qrcFileName = QFileInfo( m_uiFileName ).absolutePath() + "/" + resoruces.at( 0 );
+			compileQRC( qrcFileName );
+			bool result = QResource::registerResource( m_tempRCCFileName );
+			QFile::remove( m_tempRCCFileName );
+		}
 
 		//Instantiate from UI
 		QWidget * newTestWidget = widgetFromUI( m_uiFileName );
@@ -47,6 +68,12 @@ void MainWindow::loadWidgetFromUI()
 		if( !m_style.isEmpty() )
 			applyStylesheetToWidget( m_style, m_testWidget );
 		m_testWidget->show();
+
+		m_ui.lineEdit_ui->setText( QFileInfo( m_uiFileName ).fileName() );
+		m_ui.pushButton_qss->setEnabled( true );
+		saveSettings();
+		updateUIStates();
+		updateFileWatcher();
 	}
 	catch( ... )
 	{
@@ -54,12 +81,31 @@ void MainWindow::loadWidgetFromUI()
 	}
 }
 
-void MainWindow::loadAndApplyQSS()
+void MainWindow::loadQSSFromFile()
+{
+	if( !openQSSFile() )
+		return;
+	loadQSS();
+}
+
+void MainWindow::loadLastQSS()
+{
+	loadSettings();
+	loadQSS();
+}
+
+void MainWindow::loadQSS()
 {
 	try
 	{
 		m_style = readStylesheetFromQSS( m_qssFileName );
 		applyStylesheetToWidget( m_style, m_testWidget );
+
+		m_ui.lineEdit_qss->setText( QFileInfo( m_qssFileName ).fileName() );
+		m_ui.pushButton_done->setEnabled( true );
+		saveSettings();
+		updateUIStates();
+		updateFileWatcher();
 	}
 	catch( ... )
 	{
@@ -169,10 +215,12 @@ void MainWindow::applyStylesheetToWidget( QString const & style, QWidget * widge
 	widget->setStyleSheet( style );
 }
 
-void MainWindow::initFileWatcher()
+void MainWindow::updateFileWatcher()
 {
-	m_fileWatcher.addPath( m_qssFileName );
-	m_fileWatcher.addPath( m_uiFileName );
+	if( !m_qssFileName.isEmpty() )
+		m_fileWatcher.addPath( m_qssFileName );
+	if( !m_uiFileName.isEmpty() )
+		m_fileWatcher.addPath( m_uiFileName );
 }
 
 void MainWindow::watchedFileChanged( const QString & path )
@@ -180,7 +228,67 @@ void MainWindow::watchedFileChanged( const QString & path )
 	qDebug() << "fileChanged: " << path;
 	m_fileWatcher.addPath( path ); //not to loose the track of a file
 	if( path == m_uiFileName )
-		loadWidgetFromUI();
+		loadUIFromFile();
 	if( path == m_qssFileName )
-		loadAndApplyQSS();
+		loadQSSFromFile();
 }
+
+void MainWindow::initUIStates()
+{
+	m_ui.pushButton_qss->setEnabled( false );
+	m_ui.pushButton_done->setEnabled( false );
+	m_ui.pushButton_recentUI->setEnabled( false );
+	m_ui.pushButton_recentQSS->setEnabled( false );
+	updateUIStates();
+}
+
+void MainWindow::updateUIStates()
+{
+	m_ui.pushButton_recentUI->setEnabled( !m_uiFileName.isEmpty() );
+	m_ui.pushButton_recentQSS->setEnabled( ( !m_qssFileName.isEmpty() ) && m_ui.pushButton_qss->isEnabled() );
+}
+
+bool MainWindow::openUIFile()
+{
+	QString fileName = QFileDialog::getOpenFileName(
+		QApplication::activeWindow(),
+		tr( "Open UI File" ),
+		QFileInfo( m_uiFileName ).absolutePath(),
+		tr( "UI files (*.ui);;" )
+		);
+	if( fileName.isEmpty() )
+	{
+		return false;
+	}
+	m_uiFileName = fileName;
+	return true;
+}
+
+bool MainWindow::openQSSFile()
+{
+	QString fileName = QFileDialog::getOpenFileName(
+		QApplication::activeWindow(),
+		tr( "Open QSS File" ),
+		QFileInfo( m_qssFileName ).absolutePath(),
+		tr( "QSS files (*.qss);;" )
+		);
+	if( fileName.isEmpty() )
+	{
+		return false;
+	}
+	m_qssFileName = fileName;
+	return true;
+}
+
+void MainWindow::loadSettings()
+{
+	m_uiFileName = m_settings.value( "Settings/FileNameUI", "" ).toString();
+	m_qssFileName = m_settings.value( "Settings/FileNameQSS", "" ).toString();
+}
+
+void MainWindow::saveSettings()
+{
+	m_settings.setValue( "Settings/FileNameUI", m_uiFileName );
+	m_settings.setValue( "Settings/FileNameQSS", m_qssFileName );
+}
+
