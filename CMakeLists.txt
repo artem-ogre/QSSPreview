@@ -21,7 +21,7 @@ find_package(Qt5Widgets REQUIRED)
 find_package(Qt5UiTools REQUIRED)
 find_package(Qt5XmlPatterns REQUIRED)
 
-#Зreprocessor definitions
+#Preprocessor definitions
 if (WIN32)
 	add_definitions(-DCL_COMP)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /bigobj /EHsc")
@@ -30,6 +30,14 @@ if (WIN32)
 		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
 	endif (MSVC)
 endif (WIN32)
+
+# GUI Type
+if(WIN32)
+	set(gui_type WIN32)
+endif(WIN32)
+if(APPLE)
+	set(gui_type MACOSX_BUNDLE)
+endif(APPLE)
 
 #Collect .cpp, .h, and .ui sources from the corresponding directies
 file(GLOB files_cpp "source/*.cpp")
@@ -41,7 +49,10 @@ qt5_wrap_ui( files_ui_h ${files_ui})
 QT5_ADD_RESOURCES( files_qrc_cpp ${files_qrc} ) #resources have to be added to executables!
 
 #Add an executable
-add_executable(qss ${files_cpp} ${files_h} ${files_ui_h} ${files_qrc_cpp})
+add_executable(qss ${gui_type} ${files_cpp} ${files_h} ${files_ui_h} ${files_qrc_cpp} qss.rc)
 
 # Use the Widgets module from Qt 5.
 target_link_libraries(qss Qt5::Widgets Qt5::UiTools Qt5::XmlPatterns)
+if(WIN32)
+	target_link_libraries(qss Qt5::WinMain)
+endif(WIN32)

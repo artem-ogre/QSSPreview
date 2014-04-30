@@ -60,6 +60,7 @@ void MainWindow::loadUI()
 		//Instantiate from UI
 		QWidget * newTestWidget = widgetFromUI( m_uiFileName );
 		if( m_testWidget )
+
 		{
 			newTestWidget->restoreGeometry( m_testWidget->saveGeometry() );
 			delete m_testWidget;
@@ -68,7 +69,8 @@ void MainWindow::loadUI()
 		if( !m_style.isEmpty() )
 			applyStylesheetToWidget( m_style, m_testWidget );
 		m_testWidget->show();
-
+		this->activateWindow();
+		
 		m_ui.lineEdit_ui->setText( QFileInfo( m_uiFileName ).fileName() );
 		m_ui.pushButton_qss->setEnabled( true );
 		saveSettings();
@@ -170,7 +172,7 @@ void MainWindow::compileQRC( QString filename ) const
 	}
 
 	// Run rcc on qrc
-	const QString command = "C:/Tools/Qt-5/qtbase/bin/rcc";
+	const QString command = "rcc";
 	QStringList params; params << "-binary" << filename << "-o" << m_tempRCCFileName;
 	QProcess process;
 	process.start( command, params );
@@ -228,9 +230,9 @@ void MainWindow::watchedFileChanged( const QString & path )
 	qDebug() << "fileChanged: " << path;
 	m_fileWatcher.addPath( path ); //not to loose the track of a file
 	if( path == m_uiFileName )
-		loadUIFromFile();
+		loadUI();
 	if( path == m_qssFileName )
-		loadQSSFromFile();
+		loadQSS();
 }
 
 void MainWindow::initUIStates()
@@ -250,12 +252,10 @@ void MainWindow::updateUIStates()
 
 bool MainWindow::openUIFile()
 {
-	QString fileName = QFileDialog::getOpenFileName(
-		QApplication::activeWindow(),
-		tr( "Open UI File" ),
-		QFileInfo( m_uiFileName ).absolutePath(),
-		tr( "UI files (*.ui);;" )
-		);
+	QString fileName = QFileDialog::getOpenFileName( QApplication::activeWindow(), 
+													 "Open UI File", 
+													 QFileInfo( m_uiFileName ).absolutePath(),
+													 "UI files (*.ui);;" );
 	if( fileName.isEmpty() )
 	{
 		return false;
