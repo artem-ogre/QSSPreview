@@ -73,6 +73,7 @@ void MainWindow::loadUI()
 		
 		m_ui.lineEdit_ui->setText( QFileInfo( m_uiFileName ).fileName() );
 		m_ui.pushButton_qss->setEnabled( true );
+		m_ui.label_qss->setEnabled( true );
 		saveSettings();
 		updateUIStates();
 		updateFileWatcher();
@@ -105,6 +106,7 @@ void MainWindow::loadQSS()
 
 		m_ui.lineEdit_qss->setText( QFileInfo( m_qssFileName ).fileName() );
 		m_ui.pushButton_done->setEnabled( true );
+		m_ui.label_done->setEnabled( true );
 		saveSettings();
 		updateUIStates();
 		updateFileWatcher();
@@ -241,6 +243,8 @@ void MainWindow::initUIStates()
 	m_ui.pushButton_done->setEnabled( false );
 	m_ui.pushButton_recentUI->setEnabled( false );
 	m_ui.pushButton_recentQSS->setEnabled( false );
+	m_ui.label_qss->setEnabled( false );
+	m_ui.label_done->setEnabled( false );
 	updateUIStates();
 }
 
@@ -291,4 +295,46 @@ void MainWindow::saveSettings()
 	m_settings.setValue( "Settings/FileNameUI", m_uiFileName );
 	m_settings.setValue( "Settings/FileNameQSS", m_qssFileName );
 }
+
+void MainWindow::dropEvent( QDropEvent * event )
+{
+	const QMimeData *mimeData = event->mimeData();
+	if( mimeData->hasText() )
+	{
+		QList<QUrl> urls =  mimeData->urls();
+		bool doLoadUI = false, doLoadQSS = false;
+		for( int i = 0; i < urls.size(); ++i )
+		{
+			if( !urls.at( i ).isLocalFile() )
+				continue;
+			QFileInfo fi( urls.at( i ).toLocalFile() );
+			if( !fi.exists() )
+				return;
+			if( 0 == fi.suffix().compare( "ui", Qt::CaseInsensitive ) )
+			{
+				m_uiFileName = fi.absoluteFilePath();
+				doLoadUI = true;
+			}
+			else if( 0 == fi.suffix().compare( "qss", Qt::CaseInsensitive ) )
+			{
+				m_qssFileName = fi.absoluteFilePath();
+				doLoadQSS = true;
+			}
+		}
+		if( doLoadUI )
+			loadUI();
+		if( doLoadQSS && m_ui.pushButton_qss->isEnabled() )
+			loadQSS();
+		if( doLoadUI || doLoadQSS )
+			event->acceptProposedAction();
+	}
+}
+
+void MainWindow::dragEnterEvent( QDragEnterEvent * event )
+{
+	if( event->mimeData()->hasUrls() )
+		event->acceptProposedAction();
+}
+
+void MainWindow::dragLeaveEvent( QDragLeaveEvent * event ) {}
 

@@ -28,6 +28,11 @@ private:
 	QString readStylesheetFromQSS( QString const& ) const;
 	void loadUI();
 	void loadQSS();
+
+protected:
+	void dropEvent( QDropEvent * event );
+	void dragEnterEvent ( QDragEnterEvent * event );
+	void dragLeaveEvent ( QDragLeaveEvent * event );
 	
 private slots:
 	void loadUIFromFile();
