@@ -23,14 +23,14 @@ MainWindow::MainWindow( QWidget *parent )
 
 void MainWindow::connectSignalsToSlots()
 {
-	connect( m_ui.pushButton_ui, SIGNAL( clicked() ), this, SLOT( loadUIFromFile() ) );
-	connect( m_ui.pushButton_qss, SIGNAL( clicked() ), this, SLOT( loadQSSFromFile() ) );
+	connect( m_ui.pushButton_ui, SIGNAL( clicked() ), this, SLOT( loadUIOpenFile() ) );
+	connect( m_ui.pushButton_qss, SIGNAL( clicked() ), this, SLOT( loadQSSOpenFile() ) );
 	connect( m_ui.pushButton_recentUI, SIGNAL( clicked() ), this, SLOT( loadLastUI() ) );
 	connect( m_ui.pushButton_recentQSS, SIGNAL( clicked() ), this, SLOT( loadLastQSS() ) );
 	connect( &m_fileWatcher, SIGNAL( fileChanged( QString ) ), this, SLOT( watchedFileChanged( QString ) ) );
 }
 
-void MainWindow::loadUIFromFile()
+void MainWindow::loadUIOpenFile()
 {
 	if( !openUIFile() )
 		return;
@@ -84,7 +84,7 @@ void MainWindow::loadUI()
 	}
 }
 
-void MainWindow::loadQSSFromFile()
+void MainWindow::loadQSSOpenFile()
 {
 	if( !openQSSFile() )
 		return;
@@ -337,4 +337,18 @@ void MainWindow::dragEnterEvent( QDragEnterEvent * event )
 }
 
 void MainWindow::dragLeaveEvent( QDragLeaveEvent * event ) {}
+
+void MainWindow::loadUIFromFile( QString const &fileName )
+{
+	m_uiFileName = fileName;
+	loadUI();
+}
+
+void MainWindow::loadQSSFromFile( QString const &fileName )
+{
+	m_qssFileName = fileName;
+	loadQSS();
+}
+
+
 

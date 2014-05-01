@@ -11,6 +11,8 @@ class MainWindow : public QMainWindow
 
 public:
 	MainWindow( QWidget *parent = 0 );
+	void loadUIFromFile(QString const &fileName);
+	void loadQSSFromFile(QString const &fileName);
 
 private:
 	void connectSignalsToSlots();
@@ -35,9 +37,9 @@ protected:
 	void dragLeaveEvent ( QDragLeaveEvent * event );
 	
 private slots:
-	void loadUIFromFile();
+	void loadUIOpenFile();
 	void loadLastUI();
-	void loadQSSFromFile();
+	void loadQSSOpenFile();
 	void loadLastQSS();
 	void watchedFileChanged( const QString & path );
 
