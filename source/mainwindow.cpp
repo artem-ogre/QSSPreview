@@ -12,7 +12,7 @@ QString MainWindow::m_qssFileName = "";
 QSettings MainWindow::m_settings("ArtemAmirkhanov", "QSS");
 
 MainWindow::MainWindow( QWidget *parent )
-: QMainWindow( parent ), m_fileWatcher( this ), m_testWidget( 0 )
+: QMainWindow( parent ),  m_testWidget( 0 ), m_fileWatcher( this )
 {
 	m_ui.setupUi( this );
 	connectSignalsToSlots();
@@ -53,7 +53,7 @@ void MainWindow::loadUI()
 		{
 			QString qrcFileName = QFileInfo( m_uiFileName ).absolutePath() + "/" + resoruces.at( 0 );
 			compileQRC( qrcFileName );
-			bool result = QResource::registerResource( m_tempRCCFileName );
+			QResource::registerResource( m_tempRCCFileName );
 			QFile::remove( m_tempRCCFileName );
 		}
 
@@ -174,22 +174,24 @@ void MainWindow::compileQRC( QString filename ) const
 	}
 
 	// Run rcc on qrc
-	const QString command = "rcc";
+	QString command = "rcc";
+#ifndef WIN32
+	command = QDir::currentPath() + "/rcc";
+#endif
 	QStringList params; params << "-binary" << filename << "-o" << m_tempRCCFileName;
-	QProcess process;
-	process.start( command, params );
-	if( !process.waitForFinished() ) {
-		const QString path = QString::fromLocal8Bit( qgetenv( "PATH" ) );
-		QString message = QString( "'%1' could not be found when run from '%2'. Path: '%3' " ).arg( command, QDir::currentPath(), path );
-		LogErrorAndThrowException( message.toLocal8Bit().constData() );
-	}
-	const QChar cr = QLatin1Char( '\r' );
-	const QString err = QString::fromLocal8Bit( process.readAllStandardError() ).remove( cr );
-	if( !err.isEmpty() )
-	{
-		QString message( "Unexpected stderr contents: " + err );
-		LogErrorAndThrowException( message.toLocal8Bit().constData() );
-	}
+    qDebug() << command << params;
+    int result = QProcess::execute( command, params );
+	switch ( result )
+     {
+        case -2:
+            LogErrorAndThrowException( "RCC cannot be started." );
+            break;
+        case -1:
+            LogErrorAndThrowException( "RCC crashed." );
+            break;
+        default:
+            break;
+    }
 }
 
 QString MainWindow::readStylesheetFromQSS(QString const& qssFile) const
@@ -212,7 +214,7 @@ void MainWindow::applyStylesheetToWidget( QString const & style, QWidget * widge
 	{
 		LogErrorAndThrowException( "Stylesheet is empty." );
 	}
-	else if( !widget )
+	if( !widget )
 	{
 		LogErrorAndThrowException( "Stylesheet is loaded but not applied. Widget is null. Display UI first?" );
 	}
