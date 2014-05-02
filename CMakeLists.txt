@@ -40,9 +40,17 @@ if(APPLE)
 endif(APPLE)
 
 #Collect .cpp, .h, and .ui sources from the corresponding directies
-file(GLOB files_cpp "source/*.cpp")
-file(GLOB files_h "source/*.h")
-file(GLOB files_ui "ui/*.ui")
+set(files_cpp
+	source/main.cpp
+	source/mainwindow.cpp
+)
+set(files_h
+	source/mainwindow.h
+	source/common.h
+)
+set(files_ui
+	ui/MainWindow.ui
+)
 file(GLOB files_qrc "images/*.qrc")
 
 qt5_wrap_ui( files_ui_h ${files_ui})
