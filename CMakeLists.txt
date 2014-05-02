@@ -51,7 +51,9 @@ set(files_h
 set(files_ui
 	ui/MainWindow.ui
 )
-file(GLOB files_qrc "images/*.qrc")
+set(files_qrc 
+	images/icons.qrc
+)
 
 qt5_wrap_ui( files_ui_h ${files_ui})
 QT5_ADD_RESOURCES( files_qrc_cpp ${files_qrc} ) #resources have to be added to executables!
