@@ -176,7 +176,7 @@ void MainWindow::compileQRC( QString filename ) const
 	// Run rcc on qrc
 	QString command = "rcc";
 #ifndef WIN32
-	command = QDir::currentPath() + "/rcc";
+	command = QDir::currentPath() + "/rcc"; //make sure rcc runs from the local folder
 #endif
 	QStringList params; params << "-binary" << filename << "-o" << m_tempRCCFileName;
     qDebug() << command << params;
