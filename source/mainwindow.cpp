@@ -362,10 +362,13 @@ void MainWindow::loadQSSFromFile( QString const &fileName )
 
 void MainWindow::about()
 {
-	QDialog dialog;
-	Ui::About about;
-	about.setupUi(&dialog);
-	dialog.exec();
+	if( !QDesktopServices::openUrl( QUrl::fromLocalFile( "readme.html" ) ) )
+	{
+		QDialog dialog;
+		Ui::About about;
+		about.setupUi( &dialog );
+		dialog.exec();
+	}
 }
 
 
