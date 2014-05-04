@@ -1,0 +1,48 @@
+@font-face {
+  font-family: 'OpenSans-Regular';
+  src: url('Open_Sans/OpenSans-Regular.ttf');
+}
+
+* {
+    font-family: OpenSans-Regular;
+}
+
+.wrapper-full
+{
+	width: 480px;
+	margin: 0 auto
+}
+.wrapper-slim
+{
+	width:750px;
+	margin: 0 auto
+}
+.beer
+{
+	width:200px;
+	margin: 0 auto
+}
+
+/* --- Grid --- */
+.grid {
+  width: 480px;
+  margin: auto;
+}
+.grid-m1 {
+  float: left;
+  width: 0px;
+  height: 1px;
+}
+.grid-c1 {
+  float: left;
+  width: 240px;
+}
+.grid-m2 {
+  float: left;
+  width: 0px;
+  height: 1px;
+}
+.grid-c2 {
+  float: left;
+  width: 240px;
+}

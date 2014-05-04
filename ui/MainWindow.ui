@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>880</width>
-    <height>385</height>
+    <width>920</width>
+    <height>360</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>880</width>
+    <width>920</width>
     <height>360</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>880</width>
-    <height>16777215</height>
+    <width>920</width>
+    <height>360</height>
    </size>
   </property>
   <property name="acceptDrops">
@@ -66,8 +66,8 @@ QPushButton:pressed
    <widget class="QLineEdit" name="lineEdit_ui">
     <property name="geometry">
      <rect>
-      <x>3</x>
-      <y>260</y>
+      <x>43</x>
+      <y>250</y>
       <width>231</width>
       <height>41</height>
      </rect>
@@ -104,8 +104,8 @@ background: transparent;
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>23</x>
-      <y>223</y>
+      <x>63</x>
+      <y>213</y>
       <width>191</width>
       <height>29</height>
      </rect>
@@ -141,8 +141,8 @@ background: transparent;
     </property>
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>10</y>
+      <x>50</x>
+      <y>0</y>
       <width>212</width>
       <height>208</height>
      </rect>
@@ -179,8 +179,8 @@ background: transparent;
     </property>
     <property name="geometry">
      <rect>
-      <x>250</x>
-      <y>90</y>
+      <x>290</x>
+      <y>80</y>
       <width>52</width>
       <height>48</height>
      </rect>
@@ -211,8 +211,8 @@ background: transparent;
    <widget class="QPushButton" name="pushButton_5">
     <property name="geometry">
      <rect>
-      <x>570</x>
-      <y>90</y>
+      <x>610</x>
+      <y>80</y>
       <width>52</width>
       <height>48</height>
      </rect>
@@ -240,8 +240,8 @@ background: transparent;
     </property>
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>300</y>
+      <x>130</x>
+      <y>290</y>
       <width>41</width>
       <height>31</height>
      </rect>
@@ -284,8 +284,8 @@ background: transparent;
     </property>
     <property name="geometry">
      <rect>
-      <x>420</x>
-      <y>300</y>
+      <x>460</x>
+      <y>290</y>
       <width>41</width>
       <height>31</height>
      </rect>
@@ -325,8 +325,8 @@ background: transparent;
    <widget class="QLabel" name="label_qss">
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>223</y>
+      <x>370</x>
+      <y>213</y>
       <width>211</width>
       <height>29</height>
      </rect>
@@ -362,8 +362,8 @@ background: transparent;
     </property>
     <property name="geometry">
      <rect>
-      <x>330</x>
-      <y>10</y>
+      <x>370</x>
+      <y>0</y>
       <width>212</width>
       <height>208</height>
      </rect>
@@ -397,8 +397,8 @@ background: transparent;
    <widget class="QLineEdit" name="lineEdit_qss">
     <property name="geometry">
      <rect>
-      <x>312</x>
-      <y>261</y>
+      <x>352</x>
+      <y>251</y>
       <width>261</width>
       <height>41</height>
      </rect>
@@ -438,8 +438,8 @@ background: transparent;
     </property>
     <property name="geometry">
      <rect>
-      <x>650</x>
-      <y>10</y>
+      <x>690</x>
+      <y>0</y>
       <width>212</width>
       <height>208</height>
      </rect>
@@ -467,8 +467,8 @@ background: transparent;
     </property>
     <property name="geometry">
      <rect>
-      <x>650</x>
-      <y>223</y>
+      <x>690</x>
+      <y>213</y>
       <width>211</width>
       <height>29</height>
      </rect>
@@ -504,10 +504,10 @@ background: transparent;
     </property>
     <property name="geometry">
      <rect>
-      <x>630</x>
-      <y>260</y>
+      <x>670</x>
+      <y>250</y>
       <width>251</width>
-      <height>51</height>
+      <height>71</height>
      </rect>
     </property>
     <property name="font">
@@ -517,10 +517,43 @@ background: transparent;
     </property>
     <property name="text">
      <string>Modify .ui or .qss
-to instantly see results</string>
+and instantly see the results.
+You can now close this widow.</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignHCenter|Qt::AlignTop</set>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_About">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>3</y>
+      <width>51</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>About</string>
+    </property>
+    <property name="statusTip">
+     <string>About</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset resource="../images/icons.qrc">
+      <normaloff>:/icons/about_icon.png</normaloff>:/icons/about_icon.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>48</width>
+      <height>48</height>
+     </size>
+    </property>
+    <property name="flat">
+     <bool>true</bool>
     </property>
    </widget>
    <zorder>label_qss</zorder>
@@ -536,16 +569,7 @@ to instantly see results</string>
    <zorder>pushButton_recentUI</zorder>
    <zorder>pushButton_recentQSS</zorder>
    <zorder>label_4</zorder>
-  </widget>
-  <widget class="QMenuBar" name="menubar">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>0</y>
-     <width>880</width>
-     <height>21</height>
-    </rect>
-   </property>
+   <zorder>pushButton_About</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
  </widget>

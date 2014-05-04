@@ -1,15 +1,22 @@
+/*  
+ Copyright Artem Amirkhanov 2014
+ Distributed under the MIT Software License (See accompanying file LICENSE.txt)
+ Contact the author: artem.ogre@gmail.com
+*/
+
 #include <QtGui>
 #include <QtUiTools>
 #include <QXmlQuery>
 #include <QFileDialog>
 
+#include "ui_About.h"
 #include "MainWindow.h"
 #include "common.h"
 
 QString MainWindow::m_tempRCCFileName = "tempRCC";
 QString MainWindow::m_uiFileName = "";
 QString MainWindow::m_qssFileName = "";
-QSettings MainWindow::m_settings("ArtemAmirkhanov", "QSS");
+QSettings MainWindow::m_settings("QSSPreviewDeveloper", "QSSPreview");
 
 MainWindow::MainWindow( QWidget *parent )
 : QMainWindow( parent ),  m_testWidget( 0 ), m_fileWatcher( this )
@@ -27,6 +34,7 @@ void MainWindow::connectSignalsToSlots()
 	connect( m_ui.pushButton_qss, SIGNAL( clicked() ), this, SLOT( loadQSSOpenFile() ) );
 	connect( m_ui.pushButton_recentUI, SIGNAL( clicked() ), this, SLOT( loadLastUI() ) );
 	connect( m_ui.pushButton_recentQSS, SIGNAL( clicked() ), this, SLOT( loadLastQSS() ) );
+	connect( m_ui.pushButton_About, SIGNAL( clicked() ), this, SLOT( about() ) );
 	connect( &m_fileWatcher, SIGNAL( fileChanged( QString ) ), this, SLOT( watchedFileChanged( QString ) ) );
 }
 
@@ -351,6 +359,15 @@ void MainWindow::loadQSSFromFile( QString const &fileName )
 	m_qssFileName = fileName;
 	loadQSS();
 }
+
+void MainWindow::about()
+{
+	QDialog dialog;
+	Ui::About about;
+	about.setupUi(&dialog);
+	dialog.exec();
+}
+
 
 
 

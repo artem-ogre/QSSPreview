@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.11)
-project(qss)
+project(QSSPreview)
 
 # Eliminate a warning when building in Windows that relates
 # to static linking of Qt executables to qtmain.lib.
@@ -50,6 +50,7 @@ set(files_h
 )
 set(files_ui
 	ui/MainWindow.ui
+	ui/About.ui
 )
 set(files_qrc 
 	images/icons.qrc
@@ -59,10 +60,10 @@ qt5_wrap_ui( files_ui_h ${files_ui})
 QT5_ADD_RESOURCES( files_qrc_cpp ${files_qrc} ) #resources have to be added to executables!
 
 #Add an executable
-add_executable(qss ${gui_type} ${files_cpp} ${files_h} ${files_ui_h} ${files_qrc_cpp} qss.rc)
+add_executable(QSSPreview ${gui_type} ${files_cpp} ${files_h} ${files_ui_h} ${files_qrc_cpp} QSSPreview.rc)
 
 # Use the Widgets module from Qt 5.
-target_link_libraries(qss Qt5::Widgets Qt5::UiTools Qt5::XmlPatterns)
+target_link_libraries(QSSPreview Qt5::Widgets Qt5::UiTools Qt5::XmlPatterns)
 if(WIN32)
-	target_link_libraries(qss Qt5::WinMain)
+	target_link_libraries(QSSPreview Qt5::WinMain)
 endif(WIN32)

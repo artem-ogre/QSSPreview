@@ -1,3 +1,9 @@
+/*
+ Copyright Artem Amirkhanov 2014
+ Distributed under the MIT Software License (See accompanying file LICENSE.txt)
+ Contact the author: artem.ogre@gmail.com
+*/
+
 #ifndef MAIN_WINDOW_H
 #define MAIN_WINDOW_H
 
@@ -42,6 +48,7 @@ private slots:
 	void loadQSSOpenFile();
 	void loadLastQSS();
 	void watchedFileChanged( const QString & path );
+	void about();
 
 private:
 	Ui::MainWindow m_ui;

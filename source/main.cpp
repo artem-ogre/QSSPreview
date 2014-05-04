@@ -1,3 +1,9 @@
+/*
+ Copyright Artem Amirkhanov 2014
+ Distributed under the MIT Software License (See accompanying file LICENSE.txt)
+ Contact the author: artem.ogre@gmail.com
+*/
+
 #include <QApplication>
 #include <QFileInfo>
 #include "MainWindow.h"

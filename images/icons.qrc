@@ -1,5 +1,8 @@
 <RCC>
   <qresource prefix="icons">
+    <file>about_icon.png</file>
+    <file>about_image.png</file>
+    <file>app_icon.png</file>
     <file>next_icon.png</file>
     <file>ok_icon.png</file>
     <file>qss_icon.png</file>
