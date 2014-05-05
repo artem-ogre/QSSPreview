@@ -26,7 +26,7 @@
    <bool>true</bool>
   </property>
   <property name="windowTitle">
-   <string>Qt Stylesheet Helper</string>
+   <string>QSSPreview</string>
   </property>
   <property name="toolTip">
    <string/>
