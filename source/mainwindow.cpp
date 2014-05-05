@@ -10,7 +10,7 @@
 #include <QFileDialog>
 
 #include "ui_About.h"
-#include "MainWindow.h"
+#include "mainwindow.h"
 #include "common.h"
 
 QString MainWindow::m_tempRCCFileName = "tempRCC";
@@ -362,7 +362,7 @@ void MainWindow::loadQSSFromFile( QString const &fileName )
 
 void MainWindow::about()
 {
-	if( !QDesktopServices::openUrl( QUrl::fromLocalFile( "readme.html" ) ) )
+	if( !QDesktopServices::openUrl( QUrl( "readme.html" ) ) )
 	{
 		QDialog dialog;
 		Ui::About about;
