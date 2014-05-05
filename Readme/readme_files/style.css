@@ -1,26 +1,23 @@
 @font-face {
   font-family: 'OpenSans-Regular';
-  src: url('Open_Sans/OpenSans-Regular.ttf');
+  src: url('Open_Sans/OpenSans-Regular.ttf') format('truetype');
 }
 
 * {
     font-family: OpenSans-Regular;
 }
 
-.wrapper-full
-{
+.wrapper-full {
 	width: 480px;
 	margin: 0 auto
 }
-.wrapper-slim
-{
+.wrapper-slim {
 	width:750px;
 	margin: 0 auto
 }
-.beer
-{
+.beer {
 	width:200px;
-	margin: 0 auto
+	margin: 0 auto;
 }
 
 /* --- Grid --- */
