@@ -60,4 +60,20 @@ add_executable(QSSPreview ${gui_type} ${files_cpp} ${files_h} ${files_ui_h} ${fi
 target_link_libraries(QSSPreview Qt5::Widgets Qt5::UiTools Qt5::XmlPatterns)
 if(WIN32)
 	target_link_libraries(QSSPreview Qt5::WinMain)
+	#Static linking in MSVC
+	if(MSVC)
+		option (QSSPreview_MSVC_STATIC_LINKING "Use static linking of Qt in Visual Studio" OFF)
+		if(QSSPreview_MSVC_STATIC_LINKING)
+			#Preprocessor define that tells we use static linking
+			add_definitions(-DMSVC_STATIC_LINKING)
+			#Other dependencies for static linking
+			target_link_libraries(QSSPreview 
+				debug ${Qt5_DIR}/../../Qt5PlatformSupportd.lib 
+				optimized ${Qt5_DIR}/../../Qt5PlatformSupport.lib)
+			target_link_libraries(QSSPreview 
+				debug ${Qt5_DIR}/../../../plugins/platforms/qwindowsd.lib 
+				optimized ${Qt5_DIR}/../../../plugins/platforms/qwindows.lib)
+			target_link_libraries(QSSPreview opengl32.lib imm32.lib winmm.lib Ws2_32.lib)
+		endif(QSSPreview_MSVC_STATIC_LINKING)
+	endif(MSVC)
 endif(WIN32)

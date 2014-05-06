@@ -8,6 +8,11 @@
 #include <QFileInfo>
 #include "mainwindow.h"
 
+#ifdef MSVC_STATIC_LINKING
+#include <QtPlugin>
+Q_IMPORT_PLUGIN( QWindowsIntegrationPlugin );
+#endif
+
 int main( int argc, char *argv[] )
 {
 	QApplication app( argc, argv );
