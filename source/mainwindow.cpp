@@ -56,10 +56,10 @@ void MainWindow::loadUI()
 	try
 	{
 		//Dynamically loaded resources attached to the UI file
-		QStringList resoruces = qrcListFromUI( m_uiFileName );
-		if( 0 != resoruces.size() )
+		QStringList resources = qrcListFromUI( m_uiFileName );
+		if( 0 != resources.size() )
 		{
-			QString qrcFileName = QFileInfo( m_uiFileName ).absolutePath() + "/" + resoruces.at( 0 );
+			QString qrcFileName = QFileInfo( m_uiFileName ).absolutePath() + "/" + resources.at( 0 );
 			compileQRC( qrcFileName );
 			QResource::registerResource( m_tempRCCFileName );
 			QFile::remove( m_tempRCCFileName );
@@ -216,7 +216,7 @@ QString MainWindow::readStylesheetFromQSS(QString const& qssFile) const
 	return res;
 }
 
-void MainWindow::applyStylesheetToWidget( QString const & style, QWidget * widget )
+void MainWindow::applyStylesheetToWidget( QString const & style, QWidget * widget ) const
 {
 	if( style.isEmpty() )
 	{
@@ -345,8 +345,6 @@ void MainWindow::dragEnterEvent( QDragEnterEvent * event )
 	if( event->mimeData()->hasUrls() )
 		event->acceptProposedAction();
 }
-
-void MainWindow::dragLeaveEvent( QDragLeaveEvent * event ) {}
 
 void MainWindow::loadUIFromFile( QString const &fileName )
 {

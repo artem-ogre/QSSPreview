@@ -29,7 +29,7 @@ private:
 	void saveSettings();
 	bool openUIFile();
 	bool openQSSFile();
-	void applyStylesheetToWidget( QString const & style, QWidget * widget );
+	void applyStylesheetToWidget( QString const & style, QWidget * widget ) const;
 	QWidget * widgetFromUI( QString filename ) const;
 	QStringList qrcListFromUI( QString filename ) const;
 	void compileQRC( QString filename ) const;
@@ -40,7 +40,6 @@ private:
 protected:
 	void dropEvent( QDropEvent * event );
 	void dragEnterEvent ( QDragEnterEvent * event );
-	void dragLeaveEvent ( QDragLeaveEvent * event );
 	
 private slots:
 	void loadUIOpenFile();

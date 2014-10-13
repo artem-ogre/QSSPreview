@@ -13,7 +13,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 if (WIN32)
 	set (CMAKE_LIBRARY_PATH "C:/Program Files (x86)/Windows Kits/8.1/Lib/winv6.3/um/x64" CACHE PATH "Path to your WinSDK for glu32 bindings") 
 endif (WIN32)
-find_package(Qt5 COMPONENTS Widgets UiTools XMLPatterns REQUIRED)
+find_package(Qt5 COMPONENTS Widgets UiTools XmlPatterns REQUIRED)
 
 #Preprocessor definitions
 if (WIN32)
