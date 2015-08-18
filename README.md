@@ -1,6 +1,8 @@
 ![](https://dl.dropboxusercontent.com/s/2u5davnwsfa6pj7/app_icon%20-%20small.png?dl=0)
 
-# Welcome to the QSSPreview wiki!
+# QSSPreview
+A program that allows you see changes made in QSS applied to any UI form in real-time.
+
 ## Here is a short FAQ:
 
 ### Q: How do I use it?
