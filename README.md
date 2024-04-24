@@ -24,14 +24,6 @@ Oh! And one more cool thing: if your .ui form is relying on a .qrc resource file
 
 QSSPreview is under the <a href="http://opensource.org/licenses/MIT">MIT software license</a>. You can use it as you wish, just don't forget to provide attribution back to me and don't hold me liable.
 
-### Q: Hey, this tool was helpful! Do you take donations?
-
-Was this tool helpful? This makes me happy! You could buy me a virtual beer if you wish so.
-
-[buy dev a beer (€)](https://www.paypal.com/at/cgi-bin/webscr?cmd=_flow&SESSION=vhGrM_VdC4sjT8_fHnDF96OE-PlIEIiY53qEN14TX5wiAzNX1azcd4Z5WLG&dispatch=5885d80a13c0db1f8e263663d3faee8dbd0a2170b502f343d92a90377a9956d7)
-
-[buy dev a beer ($)](https://www.paypal.com/at/cgi-bin/webscr?cmd=_flow&SESSION=-JKdTjWOysdbniTrJjZS99RaWO-WSbwKGHqJlCLn-nj1ItMO56Jtu2x6dUS&dispatch=5885d80a13c0db1f8e263663d3faee8dbd0a2170b502f343d92a90377a9956d7)
-
 ### Q: I have some feedback/comments/ideas...
 
 Please contact me via e-mail: artem . ogre @ gmail.com
